@@ -681,43 +681,45 @@ id="searchInput"
 SALES PAGE
 ===================== -->
 
-<div id="salesPage" style="display:none;">
+<div
+id="salesPage"
+style="display:none;">
 
-    <div class="content">
+<div class="content">
 
-        <div class="top-bar">
+<h2>
+Sales Records
+</h2>
 
-            <h2>Sales Records</h2>
+<br>
 
-            <button onclick="openSaleModal()">
-                + Add Sale
-            </button>
+<table>
 
-        </div>
+<thead>
 
-        <table>
+<tr>
 
-            <thead>
+<th>Sale ID</th>
 
-                <tr>
+<th>Model</th>
 
-                    <th>Sale ID</th>
-                    <th>Model</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                    <th>Date</th>
-                    <th>Action</th>
+<th>Quantity</th>
 
-                </tr>
+<th>Total</th>
 
-            </thead>
+<th>Date</th>
 
-            <tbody id="salesTable">
-            </tbody>
+</tr>
 
-        </table>
+</thead>
 
-    </div>
+<tbody id="salesTable">
+
+</tbody>
+
+</table>
+
+</div>
 
 </div>
 
@@ -727,42 +729,45 @@ SALES PAGE
 SUPPLIERS PAGE
 ===================== -->
 
-<div id="suppliersPage" style="display:none;">
+<div
+id="suppliersPage"
+style="display:none;">
 
-    <div class="content">
+<div class="content">
 
-        <div class="top-bar">
+<h2>
+Suppliers
+</h2>
 
-            <h2>Suppliers</h2>
+<br>
 
-            <button onclick="openSupplierModal()">
-                + Add Supplier
-            </button>
+<table>
 
-        </div>
+<thead>
 
-        <table>
+<tr>
 
-            <thead>
+<th>ID</th>
 
-                <tr>
+<th>Name</th>
 
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Contact</th>
-                    <th>Address</th>
-                    <th>Action</th>
+<th>Contact</th>
 
-                </tr>
+<th>Address</th>
 
-            </thead>
+</tr>
 
-            <tbody id="supplierTable">
-            </tbody>
+</thead>
 
-        </table>
+<tbody id="supplierTable">
 
-    </div>
+</tbody>
+
+</table>
+
+</div>
+
+</div>
 
 
 
@@ -955,109 +960,6 @@ Cancel
 
 </div>
 
-<!-- =====================
-SALES MODAL
-===================== -->
-
-<div class="modal" id="saleModal">
-
-    <div class="modal-content">
-
-        <h2 id="saleModalTitle">Add Sale</h2>
-
-        <br>
-
-        <input type="hidden" id="saleId">
-
-        <input
-            type="text"
-            id="saleModel"
-            placeholder="Motorcycle Model"
-        >
-
-        <input
-            type="number"
-            id="saleQuantity"
-            placeholder="Quantity"
-        >
-
-        <input
-            type="number"
-            id="saleTotal"
-            placeholder="Total Amount"
-        >
-
-        <input
-            type="date"
-            id="saleDate"
-        >
-
-        <div class="modal-actions">
-
-            <button onclick="saveSale()">
-                Save
-            </button>
-
-            <button onclick="closeSaleModal()">
-                Cancel
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- =====================
-SUPPLIER MODAL
-===================== -->
-
-<div class="modal" id="supplierModal">
-
-    <div class="modal-content">
-
-        <h2 id="supplierModalTitle">
-            Add Supplier
-        </h2>
-
-        <br>
-
-        <input type="hidden" id="supplierId">
-
-        <input
-            type="text"
-            id="supplierName"
-            placeholder="Supplier Name"
-        >
-
-        <input
-            type="text"
-            id="supplierContact"
-            placeholder="Contact Number"
-        >
-
-        <input
-            type="text"
-            id="supplierAddress"
-            placeholder="Address"
-        >
-
-        <div class="modal-actions">
-
-            <button onclick="saveSupplier()">
-                Save
-            </button>
-
-            <button onclick="closeSupplierModal()">
-                Cancel
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
 
 
 <script>
@@ -1075,7 +977,7 @@ APPS SCRIPT WEB APP URL HERE
 
 
 const API_URL =
-"https://script.google.com/macros/s/AKfycbz7KRMgqGBL6XGYc0zJaiCdkskfBJFT7CrpIeSZu8hEaXnoIrOCEVmFVQEdR9arJYhZ/exec";
+"https://script.google.com/macros/s/AKfycby_taVAxUJTam-AJKSZEjtJiz8VCUtJ31aiwEsvqzhbVnHpuquj6Bfi5rI0jwYCB54b/exec";
 
 
 
@@ -1472,7 +1374,6 @@ document.getElementById(
 
 
 
-
 /* =========================
    EDIT MOTOR
 ========================= */
@@ -1749,246 +1650,53 @@ row.style.display="none";
 ========================= */
 
 
-async function loadSales() {
+async function loadSales(){
 
-    const result = await apiRequest({
-        action: "getSales"
-    });
 
-    if (!result) return;
+const result =
+await apiRequest({
 
-    const table =
-        document.getElementById("salesTable");
+action:"getSales"
 
-    table.innerHTML = "";
+});
 
-    result.data.forEach(function(item) {
 
-        const itemData =
-            encodeURIComponent(JSON.stringify(item));
+if(!result) return;
 
-        table.innerHTML += `
 
-        <tr>
+const table =
+document.getElementById(
+"salesTable"
+);
 
-            <td>${item.saleId}</td>
 
-            <td>${item.model}</td>
+table.innerHTML="";
 
-            <td>${item.quantity}</td>
 
-            <td>₱${item.total}</td>
+result.data.forEach(function(item){
 
-            <td>${item.date}</td>
 
-            <td>
+table.innerHTML += `
 
-                <button onclick="editSaleFromData('${itemData}')">
-                    Edit
-                </button>
+<tr>
 
-                <button onclick="deleteSale('${item.saleId}')">
-                    Delete
-                </button>
+<td>${item.saleId}</td>
 
-            </td>
+<td>${item.model}</td>
 
-        </tr>
+<td>${item.quantity}</td>
 
-        `;
+<td>₱${item.total}</td>
 
-    });
+<td>${item.date}</td>
 
-}
+</tr>
 
-/* =========================
-   SALES FUNCTIONS
-========================= */
+`;
 
 
-/* OPEN ADD SALE */
+});
 
-function openSaleModal() {
-
-    document.getElementById("saleModal")
-        .style.display = "flex";
-
-    document.getElementById("saleModalTitle")
-        .innerText = "Add Sale";
-
-    document.getElementById("saleId").value = "";
-
-    document.getElementById("saleModel").value = "";
-
-    document.getElementById("saleQuantity").value = "";
-
-    document.getElementById("saleTotal").value = "";
-
-    document.getElementById("saleDate").value = "";
-
-}
-
-
-/* CLOSE SALE MODAL */
-
-function closeSaleModal() {
-
-    document.getElementById("saleModal")
-        .style.display = "none";
-
-}
-
-
-/* EDIT SALE */
-
-function editSaleFromData(data) {
-
-    const item =
-        JSON.parse(decodeURIComponent(data));
-
-    document.getElementById("saleModal")
-        .style.display = "flex";
-
-    document.getElementById("saleModalTitle")
-        .innerText = "Edit Sale";
-
-    document.getElementById("saleId").value =
-        item.saleId;
-
-    document.getElementById("saleModel").value =
-        item.model;
-
-    document.getElementById("saleQuantity").value =
-        item.quantity;
-
-    document.getElementById("saleTotal").value =
-        item.total;
-
-    document.getElementById("saleDate").value =
-        item.date;
-
-}
-
-
-/* SAVE SALE */
-
-async function saveSale() {
-
-    const saleId =
-        document.getElementById("saleId").value;
-
-    const model =
-        document.getElementById("saleModel").value;
-
-    const quantity =
-        document.getElementById("saleQuantity").value;
-
-    const total =
-        document.getElementById("saleTotal").value;
-
-    const date =
-        document.getElementById("saleDate").value;
-
-
-    if (
-        !model ||
-        !quantity ||
-        !total ||
-        !date
-    ) {
-
-        alert("Please complete all fields.");
-
-        return;
-
-    }
-
-
-    let action = "addSale";
-
-
-    if (saleId !== "") {
-
-        action = "updateSale";
-
-    }
-
-
-    const result =
-        await apiRequest({
-
-            action: action,
-
-            saleId: saleId,
-
-            model: model,
-
-            quantity: quantity,
-
-            total: total,
-
-            date: date
-
-        });
-
-
-    if (result && result.success) {
-
-        alert(
-            result.message ||
-            "Sale saved successfully."
-        );
-
-        closeSaleModal();
-
-        loadSales();
-
-        loadDashboard();
-
-    }
-
-}
-
-
-/* DELETE SALE */
-
-async function deleteSale(saleId) {
-
-    const confirmDelete =
-        confirm(
-            "Are you sure you want to delete this sale?"
-        );
-
-
-    if (!confirmDelete) {
-
-        return;
-
-    }
-
-
-    const result =
-        await apiRequest({
-
-            action: "deleteSale",
-
-            saleId: saleId
-
-        });
-
-
-    if (result && result.success) {
-
-        alert(
-            result.message ||
-            "Sale deleted successfully."
-        );
-
-        loadSales();
-
-        loadDashboard();
-
-    }
 
 }
 
@@ -1999,229 +1707,51 @@ async function deleteSale(saleId) {
 ========================= */
 
 
-async function loadSuppliers() {
+async function loadSuppliers(){
 
-    const result = await apiRequest({
-        action: "getSuppliers"
-    });
 
-    if (!result) return;
+const result =
+await apiRequest({
 
-    const table =
-        document.getElementById("supplierTable");
+action:"getSuppliers"
 
-    table.innerHTML = "";
+});
 
-    result.data.forEach(function(item) {
 
-        const itemData =
-            encodeURIComponent(JSON.stringify(item));
+if(!result) return;
 
-        table.innerHTML += `
 
-        <tr>
+const table =
+document.getElementById(
+"supplierTable"
+);
 
-            <td>${item.id}</td>
 
-            <td>${item.name}</td>
+table.innerHTML="";
 
-            <td>${item.contact}</td>
 
-            <td>${item.address}</td>
+result.data.forEach(function(item){
 
-            <td>
 
-                <button onclick="editSupplierFromData('${itemData}')">
-                    Edit
-                </button>
+table.innerHTML += `
 
-                <button onclick="deleteSupplier('${item.id}')">
-                    Delete
-                </button>
+<tr>
 
-            </td>
+<td>${item.id}</td>
 
-        </tr>
+<td>${item.name}</td>
 
-        `;
+<td>${item.contact}</td>
 
-    });
+<td>${item.address}</td>
 
-}
+</tr>
 
-/* =========================
-   SUPPLIER FUNCTIONS
-========================= */
+`;
 
 
-/* OPEN ADD SUPPLIER */
+});
 
-function openSupplierModal() {
-
-    document.getElementById("supplierModal")
-        .style.display = "flex";
-
-    document.getElementById("supplierModalTitle")
-        .innerText = "Add Supplier";
-
-    document.getElementById("supplierId").value = "";
-
-    document.getElementById("supplierName").value = "";
-
-    document.getElementById("supplierContact").value = "";
-
-    document.getElementById("supplierAddress").value = "";
-
-}
-
-
-/* CLOSE SUPPLIER MODAL */
-
-function closeSupplierModal() {
-
-    document.getElementById("supplierModal")
-        .style.display = "none";
-
-}
-
-
-/* EDIT SUPPLIER */
-
-function editSupplierFromData(data) {
-
-    const item =
-        JSON.parse(decodeURIComponent(data));
-
-    document.getElementById("supplierModal")
-        .style.display = "flex";
-
-    document.getElementById("supplierModalTitle")
-        .innerText = "Edit Supplier";
-
-    document.getElementById("supplierId").value =
-        item.id;
-
-    document.getElementById("supplierName").value =
-        item.name;
-
-    document.getElementById("supplierContact").value =
-        item.contact;
-
-    document.getElementById("supplierAddress").value =
-        item.address;
-
-}
-
-
-/* SAVE SUPPLIER */
-
-async function saveSupplier() {
-
-    const id =
-        document.getElementById("supplierId").value;
-
-    const name =
-        document.getElementById("supplierName").value;
-
-    const contact =
-        document.getElementById("supplierContact").value;
-
-    const address =
-        document.getElementById("supplierAddress").value;
-
-
-    if (
-        !name ||
-        !contact ||
-        !address
-    ) {
-
-        alert("Please complete all fields.");
-
-        return;
-
-    }
-
-
-    let action = "addSupplier";
-
-
-    if (id !== "") {
-
-        action = "updateSupplier";
-
-    }
-
-
-    const result =
-        await apiRequest({
-
-            action: action,
-
-            id: id,
-
-            name: name,
-
-            contact: contact,
-
-            address: address
-
-        });
-
-
-    if (result && result.success) {
-
-        alert(
-            result.message ||
-            "Supplier saved successfully."
-        );
-
-        closeSupplierModal();
-
-        loadSuppliers();
-
-    }
-
-}
-
-
-/* DELETE SUPPLIER */
-
-async function deleteSupplier(id) {
-
-    const confirmDelete =
-        confirm(
-            "Are you sure you want to delete this supplier?"
-        );
-
-
-    if (!confirmDelete) {
-
-        return;
-
-    }
-
-
-    const result =
-        await apiRequest({
-
-            action: "deleteSupplier",
-
-            id: id
-
-        });
-
-
-    if (result && result.success) {
-
-        alert(
-            result.message ||
-            "Supplier deleted successfully."
-        );
-
-        loadSuppliers();
-
-    }
 
 }
 
