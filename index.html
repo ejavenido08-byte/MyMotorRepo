@@ -681,45 +681,43 @@ id="searchInput"
 SALES PAGE
 ===================== -->
 
-<div
-id="salesPage"
-style="display:none;">
+<div id="salesPage" style="display:none;">
 
-<div class="content">
+    <div class="content">
 
-<h2>
-Sales Records
-</h2>
+        <div class="top-bar">
 
-<br>
+            <h2>Sales Records</h2>
 
-<table>
+            <button onclick="openSaleModal()">
+                + Add Sale
+            </button>
 
-<thead>
+        </div>
 
-<tr>
+        <table>
 
-<th>Sale ID</th>
+            <thead>
 
-<th>Model</th>
+                <tr>
 
-<th>Quantity</th>
+                    <th>Sale ID</th>
+                    <th>Model</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Date</th>
+                    <th>Action</th>
 
-<th>Total</th>
+                </tr>
 
-<th>Date</th>
+            </thead>
 
-</tr>
+            <tbody id="salesTable">
+            </tbody>
 
-</thead>
+        </table>
 
-<tbody id="salesTable">
-
-</tbody>
-
-</table>
-
-</div>
+    </div>
 
 </div>
 
@@ -729,45 +727,42 @@ Sales Records
 SUPPLIERS PAGE
 ===================== -->
 
-<div
-id="suppliersPage"
-style="display:none;">
+<div id="suppliersPage" style="display:none;">
 
-<div class="content">
+    <div class="content">
 
-<h2>
-Suppliers
-</h2>
+        <div class="top-bar">
 
-<br>
+            <h2>Suppliers</h2>
 
-<table>
+            <button onclick="openSupplierModal()">
+                + Add Supplier
+            </button>
 
-<thead>
+        </div>
 
-<tr>
+        <table>
 
-<th>ID</th>
+            <thead>
 
-<th>Name</th>
+                <tr>
 
-<th>Contact</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Address</th>
+                    <th>Action</th>
 
-<th>Address</th>
+                </tr>
 
-</tr>
+            </thead>
 
-</thead>
+            <tbody id="supplierTable">
+            </tbody>
 
-<tbody id="supplierTable">
+        </table>
 
-</tbody>
-
-</table>
-
-</div>
-
-</div>
+    </div>
 
 
 
