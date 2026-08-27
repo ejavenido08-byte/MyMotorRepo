@@ -955,6 +955,109 @@ Cancel
 
 </div>
 
+<!-- =====================
+SALES MODAL
+===================== -->
+
+<div class="modal" id="saleModal">
+
+    <div class="modal-content">
+
+        <h2 id="saleModalTitle">Add Sale</h2>
+
+        <br>
+
+        <input type="hidden" id="saleId">
+
+        <input
+            type="text"
+            id="saleModel"
+            placeholder="Motorcycle Model"
+        >
+
+        <input
+            type="number"
+            id="saleQuantity"
+            placeholder="Quantity"
+        >
+
+        <input
+            type="number"
+            id="saleTotal"
+            placeholder="Total Amount"
+        >
+
+        <input
+            type="date"
+            id="saleDate"
+        >
+
+        <div class="modal-actions">
+
+            <button onclick="saveSale()">
+                Save
+            </button>
+
+            <button onclick="closeSaleModal()">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =====================
+SUPPLIER MODAL
+===================== -->
+
+<div class="modal" id="supplierModal">
+
+    <div class="modal-content">
+
+        <h2 id="supplierModalTitle">
+            Add Supplier
+        </h2>
+
+        <br>
+
+        <input type="hidden" id="supplierId">
+
+        <input
+            type="text"
+            id="supplierName"
+            placeholder="Supplier Name"
+        >
+
+        <input
+            type="text"
+            id="supplierContact"
+            placeholder="Contact Number"
+        >
+
+        <input
+            type="text"
+            id="supplierAddress"
+            placeholder="Address"
+        >
+
+        <div class="modal-actions">
+
+            <button onclick="saveSupplier()">
+                Save
+            </button>
+
+            <button onclick="closeSupplierModal()">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 
 <script>
@@ -1369,6 +1472,7 @@ document.getElementById(
 
 
 
+
 /* =========================
    EDIT MOTOR
 ========================= */
@@ -1645,53 +1749,246 @@ row.style.display="none";
 ========================= */
 
 
-async function loadSales(){
+async function loadSales() {
+
+    const result = await apiRequest({
+        action: "getSales"
+    });
+
+    if (!result) return;
+
+    const table =
+        document.getElementById("salesTable");
+
+    table.innerHTML = "";
+
+    result.data.forEach(function(item) {
+
+        const itemData =
+            encodeURIComponent(JSON.stringify(item));
+
+        table.innerHTML += `
+
+        <tr>
+
+            <td>${item.saleId}</td>
+
+            <td>${item.model}</td>
+
+            <td>${item.quantity}</td>
+
+            <td>₱${item.total}</td>
+
+            <td>${item.date}</td>
+
+            <td>
+
+                <button onclick="editSaleFromData('${itemData}')">
+                    Edit
+                </button>
+
+                <button onclick="deleteSale('${item.saleId}')">
+                    Delete
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+/* =========================
+   SALES FUNCTIONS
+========================= */
 
 
-const result =
-await apiRequest({
+/* OPEN ADD SALE */
 
-action:"getSales"
+function openSaleModal() {
 
-});
+    document.getElementById("saleModal")
+        .style.display = "flex";
 
+    document.getElementById("saleModalTitle")
+        .innerText = "Add Sale";
 
-if(!result) return;
+    document.getElementById("saleId").value = "";
 
+    document.getElementById("saleModel").value = "";
 
-const table =
-document.getElementById(
-"salesTable"
-);
+    document.getElementById("saleQuantity").value = "";
 
+    document.getElementById("saleTotal").value = "";
 
-table.innerHTML="";
+    document.getElementById("saleDate").value = "";
 
-
-result.data.forEach(function(item){
-
-
-table.innerHTML += `
-
-<tr>
-
-<td>${item.saleId}</td>
-
-<td>${item.model}</td>
-
-<td>${item.quantity}</td>
-
-<td>₱${item.total}</td>
-
-<td>${item.date}</td>
-
-</tr>
-
-`;
+}
 
 
-});
+/* CLOSE SALE MODAL */
 
+function closeSaleModal() {
+
+    document.getElementById("saleModal")
+        .style.display = "none";
+
+}
+
+
+/* EDIT SALE */
+
+function editSaleFromData(data) {
+
+    const item =
+        JSON.parse(decodeURIComponent(data));
+
+    document.getElementById("saleModal")
+        .style.display = "flex";
+
+    document.getElementById("saleModalTitle")
+        .innerText = "Edit Sale";
+
+    document.getElementById("saleId").value =
+        item.saleId;
+
+    document.getElementById("saleModel").value =
+        item.model;
+
+    document.getElementById("saleQuantity").value =
+        item.quantity;
+
+    document.getElementById("saleTotal").value =
+        item.total;
+
+    document.getElementById("saleDate").value =
+        item.date;
+
+}
+
+
+/* SAVE SALE */
+
+async function saveSale() {
+
+    const saleId =
+        document.getElementById("saleId").value;
+
+    const model =
+        document.getElementById("saleModel").value;
+
+    const quantity =
+        document.getElementById("saleQuantity").value;
+
+    const total =
+        document.getElementById("saleTotal").value;
+
+    const date =
+        document.getElementById("saleDate").value;
+
+
+    if (
+        !model ||
+        !quantity ||
+        !total ||
+        !date
+    ) {
+
+        alert("Please complete all fields.");
+
+        return;
+
+    }
+
+
+    let action = "addSale";
+
+
+    if (saleId !== "") {
+
+        action = "updateSale";
+
+    }
+
+
+    const result =
+        await apiRequest({
+
+            action: action,
+
+            saleId: saleId,
+
+            model: model,
+
+            quantity: quantity,
+
+            total: total,
+
+            date: date
+
+        });
+
+
+    if (result && result.success) {
+
+        alert(
+            result.message ||
+            "Sale saved successfully."
+        );
+
+        closeSaleModal();
+
+        loadSales();
+
+        loadDashboard();
+
+    }
+
+}
+
+
+/* DELETE SALE */
+
+async function deleteSale(saleId) {
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this sale?"
+        );
+
+
+    if (!confirmDelete) {
+
+        return;
+
+    }
+
+
+    const result =
+        await apiRequest({
+
+            action: "deleteSale",
+
+            saleId: saleId
+
+        });
+
+
+    if (result && result.success) {
+
+        alert(
+            result.message ||
+            "Sale deleted successfully."
+        );
+
+        loadSales();
+
+        loadDashboard();
+
+    }
 
 }
 
@@ -1702,51 +1999,229 @@ table.innerHTML += `
 ========================= */
 
 
-async function loadSuppliers(){
+async function loadSuppliers() {
+
+    const result = await apiRequest({
+        action: "getSuppliers"
+    });
+
+    if (!result) return;
+
+    const table =
+        document.getElementById("supplierTable");
+
+    table.innerHTML = "";
+
+    result.data.forEach(function(item) {
+
+        const itemData =
+            encodeURIComponent(JSON.stringify(item));
+
+        table.innerHTML += `
+
+        <tr>
+
+            <td>${item.id}</td>
+
+            <td>${item.name}</td>
+
+            <td>${item.contact}</td>
+
+            <td>${item.address}</td>
+
+            <td>
+
+                <button onclick="editSupplierFromData('${itemData}')">
+                    Edit
+                </button>
+
+                <button onclick="deleteSupplier('${item.id}')">
+                    Delete
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+/* =========================
+   SUPPLIER FUNCTIONS
+========================= */
 
 
-const result =
-await apiRequest({
+/* OPEN ADD SUPPLIER */
 
-action:"getSuppliers"
+function openSupplierModal() {
 
-});
+    document.getElementById("supplierModal")
+        .style.display = "flex";
 
+    document.getElementById("supplierModalTitle")
+        .innerText = "Add Supplier";
 
-if(!result) return;
+    document.getElementById("supplierId").value = "";
 
+    document.getElementById("supplierName").value = "";
 
-const table =
-document.getElementById(
-"supplierTable"
-);
+    document.getElementById("supplierContact").value = "";
 
+    document.getElementById("supplierAddress").value = "";
 
-table.innerHTML="";
-
-
-result.data.forEach(function(item){
+}
 
 
-table.innerHTML += `
+/* CLOSE SUPPLIER MODAL */
 
-<tr>
+function closeSupplierModal() {
 
-<td>${item.id}</td>
+    document.getElementById("supplierModal")
+        .style.display = "none";
 
-<td>${item.name}</td>
-
-<td>${item.contact}</td>
-
-<td>${item.address}</td>
-
-</tr>
-
-`;
+}
 
 
-});
+/* EDIT SUPPLIER */
 
+function editSupplierFromData(data) {
+
+    const item =
+        JSON.parse(decodeURIComponent(data));
+
+    document.getElementById("supplierModal")
+        .style.display = "flex";
+
+    document.getElementById("supplierModalTitle")
+        .innerText = "Edit Supplier";
+
+    document.getElementById("supplierId").value =
+        item.id;
+
+    document.getElementById("supplierName").value =
+        item.name;
+
+    document.getElementById("supplierContact").value =
+        item.contact;
+
+    document.getElementById("supplierAddress").value =
+        item.address;
+
+}
+
+
+/* SAVE SUPPLIER */
+
+async function saveSupplier() {
+
+    const id =
+        document.getElementById("supplierId").value;
+
+    const name =
+        document.getElementById("supplierName").value;
+
+    const contact =
+        document.getElementById("supplierContact").value;
+
+    const address =
+        document.getElementById("supplierAddress").value;
+
+
+    if (
+        !name ||
+        !contact ||
+        !address
+    ) {
+
+        alert("Please complete all fields.");
+
+        return;
+
+    }
+
+
+    let action = "addSupplier";
+
+
+    if (id !== "") {
+
+        action = "updateSupplier";
+
+    }
+
+
+    const result =
+        await apiRequest({
+
+            action: action,
+
+            id: id,
+
+            name: name,
+
+            contact: contact,
+
+            address: address
+
+        });
+
+
+    if (result && result.success) {
+
+        alert(
+            result.message ||
+            "Supplier saved successfully."
+        );
+
+        closeSupplierModal();
+
+        loadSuppliers();
+
+    }
+
+}
+
+
+/* DELETE SUPPLIER */
+
+async function deleteSupplier(id) {
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this supplier?"
+        );
+
+
+    if (!confirmDelete) {
+
+        return;
+
+    }
+
+
+    const result =
+        await apiRequest({
+
+            action: "deleteSupplier",
+
+            id: id
+
+        });
+
+
+    if (result && result.success) {
+
+        alert(
+            result.message ||
+            "Supplier deleted successfully."
+        );
+
+        loadSuppliers();
+
+    }
 
 }
 
