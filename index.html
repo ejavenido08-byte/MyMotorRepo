@@ -674,100 +674,70 @@ id="searchInput"
 
 
 </div>
-
-
+   
 
 <!-- =====================
-SALES PAGE
+     SALE MODAL
 ===================== -->
 
 <div
-id="salesPage"
-style="display:none;">
+class="modal"
+id="saleModal">
 
-<div class="content">
+    <div class="modal-content">
 
-<h2>
-Sales Records
-</h2>
+        <h2>Add Sale</h2>
 
-<br>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Sale ID</th>
-
-<th>Model</th>
-
-<th>Quantity</th>
-
-<th>Total</th>
-
-<th>Date</th>
-
-</tr>
-
-</thead>
-
-<tbody id="salesTable">
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
+        <br>
 
 
+        <select
+        id="saleModel"
+        style="
+        width:100%;
+        padding:10px;
+        margin-bottom:12px;
+        ">
 
-<!-- =====================
-SUPPLIERS PAGE
-===================== -->
+            <option value="">
 
-<div
-id="suppliersPage"
-style="display:none;">
+                Select Motorcycle
 
-<div class="content">
+            </option>
 
-<h2>
-Suppliers
-</h2>
+        </select>
 
-<br>
 
-<table>
+        <input
+        type="number"
+        id="saleQuantity"
+        placeholder="Quantity"
+        >
 
-<thead>
 
-<tr>
+        <div class="modal-actions">
 
-<th>ID</th>
+            <button
+            onclick="saveSale()">
 
-<th>Name</th>
+                Save Sale
 
-<th>Contact</th>
+            </button>
 
-<th>Address</th>
 
-</tr>
+            <button
+            onclick="closeSaleModal()">
 
-</thead>
+                Cancel
 
-<tbody id="supplierTable">
+            </button>
 
-</tbody>
+        </div>
 
-</table>
+    </div>
 
 </div>
 
-</div>
 
 
 
@@ -1643,62 +1613,163 @@ row.style.display="none";
 
 }
 
-
+   
 
 /* =========================
-   SALES
+   SALE FUNCTIONS
 ========================= */
 
+async function openSaleModal(){
 
-async function loadSales(){
-
-
-const result =
-await apiRequest({
-
-action:"getSales"
-
-});
+    document.getElementById(
+        "saleModal"
+    ).style.display =
+    "flex";
 
 
-if(!result) return;
+    const result =
+    await apiRequest({
+
+        action:"getInventory"
+
+    });
 
 
-const table =
-document.getElementById(
-"salesTable"
-);
+    const select =
+    document.getElementById(
+        "saleModel"
+    );
 
 
-table.innerHTML="";
+    select.innerHTML =
+    `<option value="">
+    Select Motorcycle
+    </option>`;
 
 
-result.data.forEach(function(item){
+    if(
+        result &&
+        result.success
+    ){
 
+        result.data.forEach(
+        function(item){
 
-table.innerHTML += `
+            if(
+                Number(item.stock) > 0
+            ){
 
-<tr>
+                select.innerHTML += `
 
-<td>${item.saleId}</td>
+                <option
+                value="${item.model}">
 
-<td>${item.model}</td>
+                    ${item.model}
+                    (${item.stock} available)
 
-<td>${item.quantity}</td>
+                </option>
 
-<td>₱${item.total}</td>
+                `;
 
-<td>${item.date}</td>
+            }
 
-</tr>
+        });
 
-`;
-
-
-});
-
+    }
 
 }
+
+
+function closeSaleModal(){
+
+    document.getElementById(
+        "saleModal"
+    ).style.display =
+    "none";
+
+}
+
+
+async function saveSale(){
+
+    const model =
+    document.getElementById(
+        "saleModel"
+    ).value;
+
+
+    const quantity =
+    document.getElementById(
+        "saleQuantity"
+    ).value;
+
+
+    if(
+        !model ||
+        !quantity ||
+        Number(quantity) <= 0
+    ){
+
+        alert(
+            "Please select a motorcycle and quantity."
+        );
+
+        return;
+
+    }
+
+
+    const result =
+    await apiRequest({
+
+        action:"addSale",
+
+        model:model,
+
+        quantity:quantity
+
+    });
+
+
+    if(
+        result &&
+        result.success
+    ){
+
+        alert(
+            result.message
+        );
+
+
+        closeSaleModal();
+
+
+        document.getElementById(
+            "saleQuantity"
+        ).value =
+        "";
+
+
+        loadSales();
+
+        loadInventory();
+
+        loadDashboard();
+
+    }
+
+    else{
+
+        alert(
+            result.message
+        );
+
+    }
+
+}
+
+
+
 
 
 
